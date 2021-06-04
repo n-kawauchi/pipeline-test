@@ -1,0 +1,19 @@
+# -*- cmake -*-
+#
+# OpenRTM-aist CMake configuration file.
+#
+# @file OpenRTMConfig.cmake
+#
+# This file is used for cmake config-mode.
+
+
+message(STATUS "OpenRTMConfig.cmake found.")
+message(STATUS "CMAKE_GENERATOR check mode.")
+
+
+get_filename_component(OpenRTM_CONFIG_PATH "${CMAKE_CURRENT_LIST_FILE}" PATH CACHE)
+set(OPENRTM_DIR "${OpenRTM_CONFIG_PATH}/../")
+
+include("${OPENRTM_DIR}/bin/vc${MSVC_TOOLSET_VERSION}/OpenRTMConfig.cmake")
+
+# end of OpenRTMConfig.cmake
