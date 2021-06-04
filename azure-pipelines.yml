@@ -27,8 +27,8 @@ pr:
     - utils/
 
 variables:
-  omniorb: omniORB-4.2.3-x64-vc140-py37
-  omniorbUrl: https://openrtm.org/pub/omniORB/win32/omniORB-4.2.3
+  omniorb: omniORB-4.2.4-x64-vc140-py37
+  omniorbUrl: https://openrtm.org/pub/omniORB/win32/omniORB-4.2.4
   ros2: ros2-dashing-20191213-windows-amd64
   ros2Url: https://github.com/ros2/ros2/releases/download/release-dashing-20191213/
 
