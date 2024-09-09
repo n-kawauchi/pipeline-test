@@ -1,0 +1,189 @@
+#------------------------------------------------------------
+#
+# @file RPM spec file for OpenRTM-aist
+# @author Noriaki Ando <n-ando@aist.go.jp>
+#
+# $Id$
+#
+%define pkgname OpenRTM-aist
+
+%define builddir       %{_topdir}/BUILD/%{distname}
+%define pkgver         0
+%define _unpackaged_files_terminate_build   1
+%define __os_install_post %{nil}
+%define rtm_libdir     %{_libdir}/openrtm-%{shortversion}
+%global debug_package %{nil}
+
+#------------------------------------------------------------
+# Package information
+Name:    OpenRTM-aist
+Version: %{version}
+Release: %{pkgver}.%{distname}
+Summary: OpenRTM-aist: RT-Component development environment
+Group:   Development/Libraries
+License: LGPL
+URL:     http://www.openrtm.org/
+Source0: %{pkgname}-%{version}-RELEASE.tar.gz
+Vendor:  AIST
+
+#------------------------------------------------------------
+# Build environment
+Prefix:        /usr
+Buildroot:     %{_tmppath}/%{pkgname}-%{version}-%{release}-root
+Requires:      omniORB
+Requires:      omniORB-servers
+BuildRequires: omniORB-devel
+
+%description
+OpenRTM-aist is a reference implementation of RTC (Robotic Technology
+Component Version 1.1, formal/12-09-01) specification which is OMG
+standard (http://www.omg.org/spec/RTC/). OpenRTM-aist includes
+RT-Middleware runtime environment and RTC framework. The OMG standard
+defines a component model and certain important infrastructure
+services applicable to the domain of robotics software
+development. OpenRTM-aist is being developed and distributed by
+National Institute of Advanced Industrial Science and Technology
+(AIST), Japan. Please see http://www.openrtm.org/ for more detail.
+
+#------------------------------------------------------------
+# devel package
+%package devel
+Summary: Header files
+Group: Development/Libraries
+%description devel
+The header files and libraries needed for developing RT-Components
+using OpenRTM-aist.
+
+#------------------------------------------------------------
+# doc package
+%package doc
+Summary: Documentation
+Group: Development/Libraries
+%description doc
+Class reference manual of OpenRTM-aist.
+
+#------------------------------------------------------------
+# example package
+%package example
+Summary: Example
+Group: Development/Libraries
+%description example
+Example components and sources of OpenRTM-aist.
+
+#------------------------------------------------------------
+# prep section
+%prep
+%{__rm} -rf %{buildroot}
+%setup -n %{pkgname}-%{version} -q
+
+#------------------------------------------------------------
+# build section
+%build
+%configure
+%{__make}
+
+#------------------------------------------------------------
+# install section
+%install
+export DONT_STRIP=1
+%{__make} DESTDIR=%{buildroot} install
+%define ext_dir $RPM_BUILD_ROOT%{rtm_includedir}/rtm/ext
+mkdir -p %{ext_dir}/ec/artlinux
+cp %{_topdir}/../../src/ext/ec/artlinux/*.h %{ext_dir}/ec/artlinux
+cp %{_topdir}/../../src/ext/ec/artlinux/rtc.conf* %{ext_dir}/ec/artlinux
+mkdir -p %{ext_dir}/ec/logical_time/idl
+cp %{_topdir}/../../src/ext/ec/logical_time/*.h %{ext_dir}/ec/logical_time
+cp %{_topdir}/../../src/ext/ec/logical_time/*.idl %{ext_dir}/ec/logical_time
+cp %{_topdir}/../../src/ext/ec/logical_time/*ECS*.cpp %{ext_dir}/ec/logical_time
+cp %{_topdir}/../../src/ext/ec/logical_time/idl/*.hh %{ext_dir}/ec/logical_time/idl
+cp %{_topdir}/../../src/ext/ec/logical_time/idl/*.idl %{ext_dir}/ec/logical_time/idl
+cp %{_topdir}/../../src/ext/ec/logical_time/idl/*.cc %{ext_dir}/ec/logical_time/idl
+mkdir -p %{ext_dir}/ec/rtpreempt
+cp %{_topdir}/../../src/ext/ec/rtpreempt/*.h %{ext_dir}/ec/rtpreempt
+cp %{_topdir}/../../src/ext/ec/rtpreempt/rtc.conf* %{ext_dir}/ec/rtpreempt
+mkdir -p %{ext_dir}/local_service/nameservice_file
+cp %{_topdir}/../../src/ext/local_service/nameservice_file/*.h %{ext_dir}/local_service/nameservice_file
+mkdir -p %{ext_dir}/logger/fluentbit_stream
+cp %{_topdir}/../../src/ext/logger/fluentbit_stream/*.h %{ext_dir}/logger/fluentbit_stream
+cp %{_topdir}/../../src/ext/logger/fluentbit_stream/*.conf %{ext_dir}/logger/fluentbit_stream
+mkdir -p %{ext_dir}/sdo/logger
+cp %{_topdir}/../../src/ext/sdo/logger/*.h* %{ext_dir}/sdo/logger
+cp %{_topdir}/../../src/ext/sdo/logger/*.idl %{ext_dir}/sdo/logger
+cp %{_topdir}/../../src/ext/sdo/logger/*.cc %{ext_dir}/sdo/logger
+cp %{_topdir}/../../src/ext/sdo/logger/*S*.cpp %{ext_dir}/sdo/logger
+mkdir -p %{ext_dir}/sdo/observer/idl
+cp %{_topdir}/../../src/ext/sdo/observer/*.h %{ext_dir}/sdo/observer
+cp %{_topdir}/../../src/ext/sdo/observer/*.idl %{ext_dir}/sdo/observer
+cp %{_topdir}/../../src/ext/sdo/observer/*S*.cpp %{ext_dir}/sdo/observer
+cp %{_topdir}/../../src/ext/sdo/observer/idl/*.hh %{ext_dir}/sdo/observer/idl
+cp %{_topdir}/../../src/ext/sdo/observer/idl/*.idl %{ext_dir}/sdo/observer/idl
+cp %{_topdir}/../../src/ext/sdo/observer/idl/*.cc %{ext_dir}/sdo/observer/idl
+
+#------------------------------------------------------------
+# clean section
+%clean
+%{__rm} -rf %{buildroot}
+
+#------------------------------------------------------------
+# files section
+%files
+/etc/rtc.conf.sample
+%defattr(-,root,root,-)
+%attr(755,root,root) %{_bindir}/rtm2-naming
+%attr(755,root,root) %{_bindir}/rtcd2
+%attr(755,root,root) %{_bindir}/rtcprof2
+%attr(755,root,root) %{_bindir}/rtm2-config
+%{_libdir}/libRTC*
+%{_libdir}/libcoil*
+%{_libdir}/librtm*
+%{rtm_libdir}/ec/*
+%{rtm_libdir}/sdo/*
+%{rtm_libdir}/ssl/*
+
+#------------------------------------------------------------
+# devel package file list
+%files devel
+%defattr(-,root,root,-)
+%attr(755,root,root) %{_bindir}/rtc-template
+%attr(755,root,root) %{_bindir}/rtm2-skelwrapper
+%attr(755,root,root) %{_bindir}/coil-config
+%{rtm_includedir}/*
+%{coil_includedir}/*
+%{rtm_libdir}/py_helper/*
+%{_libdir}/pkgconfig/*
+%{rtm_libdir}/cmake/*
+
+
+#------------------------------------------------------------
+# doc package file list
+%files doc
+%defattr(-,root,root,-)
+%{rtm_datadir}/doc/c++/*
+%{rtm_datadir}/doc/idl/*
+
+
+#------------------------------------------------------------
+# example package file list
+%files example
+%defattr(-,root,root,-)
+%attr(755,root,root) %{rtm_datadir}/components/c++/examples/*Comp*
+%{rtm_datadir}/components/c++/examples/*.conf
+%{rtm_datadir}/components/c++/examples/src/*
+%{rtm_datadir}/components/c++/examples/rtc/*
+%{rtm_datadir}/components/c++/examples/templates/*
+
+
+#------------------------------------------------------------
+# changelog section
+%changelog
+* Wed Nov 16 2016 Noriaki Ando <n-ando@aist.go.jp> - 1.2.0-0._distname
+- The 1.2.0 release of OpenRTM-aist.
+
+* Sat Jun 4 2011 Noriaki Ando <n-ando@aist.go.jp> - 1.1.0-0._distname
+- CMakefile has been added.
+
+* Sat May 7 2011 Noriaki Ando <n-ando@aist.go.jp> - 1.1.0-0._distname
+- The 1.1.0 release of OpenRTM-aist.
+
+* Thu Sep 27 2007 Noriaki Ando <n-ando@aist.go.jp> - 0.4.1-1._distname
+- The second public release version of OpenRTM-aist-0.4.1.

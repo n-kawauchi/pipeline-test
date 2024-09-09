@@ -1,0 +1,33 @@
+# -*- cmake -*-
+#
+# OpenRTM-aist CMake configuration file.
+#
+# @file OpenRTMConfig.cmake
+#
+# This file is used for cmake config-mode.
+
+
+message(STATUS "OpenRTMConfig.cmake found.")
+message(STATUS "CMAKE_GENERATOR check mode.")
+
+if (${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
+  set(RTM_VC_VER "vc14")
+endif()
+if (${CMAKE_GENERATOR} MATCHES "Visual Studio 15")
+  set(RTM_VC_VER "vc14")
+endif()
+if (${CMAKE_GENERATOR} MATCHES "Visual Studio 16")
+  set(RTM_VC_VER "vc16")
+endif()
+if (${CMAKE_GENERATOR} MATCHES "Visual Studio 17")
+  set(RTM_VC_VER "vc16")
+endif()
+
+MESSAGE(STATUS "VC version is : ${CMAKE_GENERATOR}")
+
+get_filename_component(OpenRTM_CONFIG_PATH "${CMAKE_CURRENT_LIST_FILE}" PATH CACHE)
+set(OPENRTM_DIR "${OpenRTM_CONFIG_PATH}/../")
+
+include("${OPENRTM_DIR}/bin/${RTM_VC_VER}/OpenRTMConfig.cmake")
+
+# end of OpenRTMConfig.cmake

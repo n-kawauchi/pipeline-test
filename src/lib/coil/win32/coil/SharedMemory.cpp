@@ -1,0 +1,390 @@
+﻿// -*- C++ -*-
+/*!
+ * @file SharedMemory_win32.cpp
+ * @brief SharedMemory class
+ * @date $Date$
+ * @author Nobuhiko Miyamoto <n-miyamoto@aist.go.jp>
+ *
+ * Copyright (C) 2017 Nobuhiko Miyamoto
+ *     Robot Innovation Research Center,
+ *     Intelligent Systems Research Institute,
+ *     National Institute of
+ *         Advanced Industrial Science and Technology (AIST), Japan
+ *     All rights reserved.
+ *
+ * $Id$
+ *
+ */
+
+
+#include <coil/SharedMemory.h>
+#include <cstring>
+#include <utility>
+
+
+namespace coil
+{
+  /*!
+   * @if jp
+   * @brief コンストラクタ
+   * @else
+   * @brief Constructor
+   * @endif
+   */
+  SharedMemory::SharedMemory()
+    : m_memory_size(0),
+      m_shm(nullptr),
+      m_handle(nullptr)
+  {
+  }
+
+
+  /*!
+   * @if jp
+   * @brief デストラクタ
+   * @else
+   * @brief Destructor
+   * @endif
+   */
+  SharedMemory::~SharedMemory()
+  {
+    close();
+  }
+
+  /*!
+   * @if jp
+   * @brief コピーコンストラクタ
+   * @else
+   * @brief Copy Constructor
+   * @endif
+   */
+  SharedMemory::SharedMemory(const SharedMemory& rhs)
+  {
+    m_memory_size = rhs.m_memory_size;
+    m_shm_address = rhs.m_shm_address;
+    m_shm = rhs.m_shm;
+    m_handle = rhs.m_handle;
+  }
+
+  /*!
+   * @if jp
+   * @brief 代入演算子
+   * @else
+   * @brief Assignment operator
+   * @endif
+   */
+  SharedMemory& SharedMemory::operator=(const SharedMemory& rhs)
+  {
+    SharedMemory tmp(rhs);
+    std::swap(this->m_memory_size, tmp.m_memory_size);
+    std::swap(this->m_shm_address, tmp.m_shm_address);
+    std::swap(this->m_shm, tmp.m_shm);
+    std::swap(this->m_handle, tmp.m_handle);
+    return *this;
+  }
+
+  /*!
+   * @if jp
+   *
+   * @brief 共有メモリの生成
+   *。
+   *
+   * @param shm_address 共有メモリの識別子
+   * @param memory_size 共有メモリのサイズ
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief Create Shared Memory 
+   *
+   *
+   * @param shm_address 
+   * @param memory_size 
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::create(std::string shm_address,
+                    unsigned long long memory_size)
+  {
+    m_shm_address = shm_address;
+    m_memory_size = memory_size;
+    DWORD highsize = static_cast<DWORD>((m_memory_size >> 32) & 0xFFFFFFFF);
+    DWORD lowsize = static_cast<DWORD>(m_memory_size & 0xFFFFFFFF);
+    m_handle = CreateFileMapping(
+        static_cast<HANDLE>(INVALID_HANDLE_VALUE),
+        nullptr,
+        PAGE_READWRITE | SEC_COMMIT,
+        highsize,
+        lowsize,
+        shm_address.c_str());
+
+    m_shm = static_cast<char *>(MapViewOfFile(m_handle, FILE_MAP_ALL_ACCESS, 0, 0, 0));
+    return 0;
+  }
+
+  /*!
+   * @if jp
+   *
+   * @brief 共有メモリへのアクセス
+   *。
+   *
+   * @param shm_address 共有メモリの識別子
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief Open Shared Memory 
+   *
+   *
+   * @param shm_address 
+   * @param memory_size 
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::open(std::string shm_address, unsigned long long memory_size)
+  {
+    m_shm_address = std::move(shm_address);
+    m_memory_size = memory_size;
+    m_handle = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, m_shm_address.c_str());
+    m_shm = static_cast<char *>(MapViewOfFile(m_handle, FILE_MAP_ALL_ACCESS, 0, 0, 0));
+    return 0;
+  }
+
+  /*!
+   * @if jp
+   *
+   * @brief 共有メモリへの書き込み
+   *。
+   *
+   * @param data 書き込むデータ
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief Write Shared Memory 
+   *
+   *
+   * @param data 
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::write(const char *data, const unsigned long long pos, const unsigned long long size)
+  {
+    if (!created())
+    {
+      return -1;
+    }
+
+    if (m_memory_size < size + pos)
+    {
+      return -1;
+    }
+    memcpy(&m_shm[pos],&data[0], static_cast<size_t>(size));
+    
+   return 0;
+  }
+
+  /*!
+   * @if jp
+   *
+   * @brief 共有メモリからの読み込み
+   *。
+   *
+   * @param data 読み込むデータ
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief Read Shared Memory 
+   *
+   *
+   * @param data 
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::read(char* data, const unsigned long long pos, const unsigned long long size)
+  {
+    if (!created())
+    {
+     return -1;
+    }
+
+    memcpy(&data[0],&m_shm[pos], static_cast<size_t>(size));
+    return 0;
+  }
+
+  /*!
+   * @if jp
+   *
+   * @brief 共有メモリの削除
+   *。
+   *
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief Close Shared Memory 
+   *
+   *
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::close()
+  {
+    if (created())
+    {
+      UnmapViewOfFile(m_shm);
+    }
+    else
+    {
+      return -1;
+    }
+    if(m_handle != nullptr)
+    {
+      if (CloseHandle(m_handle) == 0)
+      {
+        return -1;
+      }
+      m_handle = nullptr;
+      return 0;
+    }
+    return 0;
+
+  }
+  /*!
+   * @if jp
+   *
+   * @brief メモリのサイズ取得
+   *。
+   *
+   *
+   * @return サイズ
+   *
+   * @else
+   *
+   * @brief 
+   *
+   *
+   *
+   * @return size
+   *
+   * @endif
+   */
+  unsigned long long SharedMemory::get_size()
+  {
+    return m_memory_size;
+  }
+  /*!
+   * @if jp
+   *
+   * @brief メモリのアドレス取得
+   *。
+   *
+   *
+   * @return アドレス
+   *
+   * @else
+   *
+   * @brief 
+   *
+   *
+   *
+   * @return address
+   *
+   * @endif
+   */
+  std::string SharedMemory::get_addresss()
+  {
+    return m_shm_address;
+  };
+  /*!
+   * @if jp
+   *
+   * @brief メモリの取得
+   *
+   *
+   *
+   * @return メモリ
+   *
+   * @else
+   *
+   * @brief 
+   *
+   *
+   *
+   * @return memory
+   *
+   * @endif
+   */
+  char *SharedMemory::get_data()
+  {
+    return m_shm;
+  }
+
+
+
+  /*!
+   * @if jp
+   *
+   * @brief ファイル削除(Windowsの場合は何もしない)
+   *
+   *
+   *
+   * @return 0: 成功, -1: 失敗
+   *
+   * @else
+   *
+   * @brief 
+   *
+   *
+   *
+   * @return 0: successful, -1: failed
+   *
+   * @endif
+   */
+  int SharedMemory::unlink()
+  {
+    return -1;
+  }
+
+
+  /*!
+  * @if jp
+  *
+  * @brief 共有メモリに生成済みかの確認
+  *
+  *
+  *
+  * @return true: 作成済み, false: 未作成
+  *
+  * @else
+  *
+  * @brief 
+  *
+  *
+  *
+  * @return
+  *
+  * @endif
+  */
+  bool SharedMemory::created()
+  {
+    return m_handle != nullptr;
+  }
+
+} // namespace coil
