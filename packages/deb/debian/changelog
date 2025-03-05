@@ -1,0 +1,42 @@
+openrtm2 (2.1.0-0) experimental; urgency=low
+
+  * 2.1.0-0 (2.1.0-RELEASE). OpenRTM-aist-2.1.0-RELEASE
+
+ --  Noriaki Ando <n-ando@aist.go.jp>  Thu, 17 Oct 2024 09:28:04 +0900
+
+openrtm2 (2.0.2-0) experimental; urgency=low
+
+  * 2.0.2-0 (2.0.2-RELEASE). OpenRTM-aist-2.0.2-RELEASE
+
+ --  Noriaki Ando <n-ando@aist.go.jp>  Thu, 09 Nov 2023 17:08:39 +0900
+
+openrtm2 (2.0.1-2) experimental; urgency=low
+
+  * Update ROS2[ROS]TransportConfig.cmake.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Tue, 25 Jul 2023 16:38:31 +0900
+
+openrtm2 (2.0.1-1) experimental; urgency=low
+
+  * Supports Ubuntu22.04.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Mon, 03 Apr 2023 17:11:02 +0900
+
+openrtm2 (2.0.1-0) experimental; urgency=low
+
+  * 2.0.1-0 (2.0.1-RELEASE). OpenRTM-aist-2.0.1-RELEASE
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Wed, 16 Nov 2022 19:50:37 +0900
+
+openrtm2 (2.0.0-1) experimental; urgency=low
+
+  * ROSTransport updated.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Thu, 25 Aug 2022 12:20:30 +0900
+
+openrtm2 (2.0.0-0) experimental; urgency=low
+
+  * 2.0.0-0 (2.0.0-RELEASE). OpenRTM-aist-2.0.0-RELEASE
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Fri, 08 Feb 2019 11:01:23 +0900
+

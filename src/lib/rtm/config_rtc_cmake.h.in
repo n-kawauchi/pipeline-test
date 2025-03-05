@@ -1,0 +1,100 @@
+#ifndef CONFIG_RTC_H
+#define CONFIG_RTC_H
+
+/* ORB is MICO */
+#cmakedefine ORB_IS_MICO TRUE
+
+/* ORB is omniORB */
+#cmakedefine ORB_IS_OMNIORB TRUE
+
+/* ORB is ORBexpresds */
+#cmakedefine ORB_IS_ORBEXPRESS TRUE
+
+/* ORB is ORBacus */
+#cmakedefine ORB_IS_ORBACUS TRUE
+
+/* ORB is ORBit2 */
+#cmakedefine ORB_IS_ORBIT2 TRUE
+
+/* ORB is Orbix */
+#cmakedefine ORB_IS_ORBIX TRUE
+
+/* ORB is RtORB */
+#cmakedefine ORB_IS_RTORB TRUE
+
+/* ORB is TAO */
+#cmakedefine ORB_IS_TAO TRUE
+
+/* Name of package */
+#cmakedefine RTM_PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine RTM_PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#cmakedefine RTM_PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#cmakedefine RTM_PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine RTM_PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#cmakedefine RTM_PACKAGE_URL
+
+/* Define to the version of this package. */
+#cmakedefine RTM_PACKAGE_VERSION
+
+/* CORBA C++ mapping is ver1.1 */
+#cmakedefine RTC_CORBA_CXXMAPPING11 TRUE
+
+/* RTM major version */
+#define RTM_MAJOR_VERSION @RTM_MAJOR_VERSION@
+
+/* RTM minor version */
+#define RTM_MINOR_VERSION @RTM_MINOR_VERSION@
+
+/* omniORB version is 4.0 */
+#cmakedefine RTM_OMNIORB_40
+
+/* omniORB version is 4.1 */
+#cmakedefine RTM_OMNIORB_41
+
+/* omniORB version is 4.2 */
+#cmakedefine RTM_OMNIORB_42
+
+/* omniORB version is 4.3 */
+#cmakedefine RTM_OMNIORB_43
+
+/* OS is Mac OS X */
+#cmakedefine RTM_OS_DARWIN TRUE
+
+/* OS is FreeBSD */
+#cmakedefine RTM_OS_FREEBSD TRUE
+
+/* OS is Linux */
+#cmakedefine RTM_OS_LINUX TRUE
+
+/* OS is VxWorks */
+#cmakedefine RTM_OS_VXWORKS TRUE
+
+/* OS is QNX */
+#cmakedefine RTM_OS_QNX TRUE
+
+/* OS is Windows */
+#cmakedefine RTM_OS_WIN32 TRUE
+
+/* OS version */
+#cmakedefine __OSVERSION__ @OSVERSION_VALUE@
+
+/* RTM revision numver */
+#define RTM_REVISION_NUM @RTM_REVISION_NUM@
+
+/* RTM short version */
+#define RTM_SHORT_VERSION "@RTM_SHORT_VERSION@"
+
+/* RTM version */
+#define RTM_VERSION "@RTM_VERSION@"
+
+#endif // CONFIG_RTC_H
