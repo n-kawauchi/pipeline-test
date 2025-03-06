@@ -317,14 +317,14 @@ namespace coil
     for (size_t i = 0; i + 1 < num; i += 2)
     {
         const char* key = defaults[i];
-        const char* value = defaults[i + 1];
+        const char* val = defaults[i + 1];
 
-        if (key == nullptr || value == nullptr) {
+        if (key == nullptr || val == nullptr) {
             continue; // NULL の場合はスキップ
         }
 
         if (key[0] != '\0') { // NULL チェック後にアクセス
-            setDefault(eraseBothEndsBlank(key), eraseBothEndsBlank(value));
+            setDefault(eraseBothEndsBlank(key), eraseBothEndsBlank(val));
         }
     }
   }
