@@ -310,17 +310,22 @@ namespace coil
    */
   void Properties::setDefaults(const char* const defaults[], size_t num)
   {
+    if (defaults == nullptr) { // defaults 自体が nullptr なら即リターン
+        return;
+    }
+
     for (size_t i = 0; i + 1 < num; i += 2)
     {
-      if (defaults[i] == nullptr || defaults[i + 1] == nullptr)
-      {
-        continue;
-      }
-      if (defaults[i][0] != '\0')
-      {
-        setDefault(eraseBothEndsBlank(defaults[i]),
-              eraseBothEndsBlank(defaults[i + 1]));
-      }
+        const char* key = defaults[i];
+        const char* value = defaults[i + 1];
+
+        if (key == nullptr || value == nullptr) {
+            continue; // NULL の場合はスキップ
+        }
+
+        if (key[0] != '\0') { // NULL チェック後にアクセス
+            setDefault(eraseBothEndsBlank(key), eraseBothEndsBlank(value));
+        }
     }
   }
 
