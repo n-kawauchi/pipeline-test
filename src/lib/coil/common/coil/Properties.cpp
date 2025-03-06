@@ -310,7 +310,7 @@ namespace coil
    */
   void Properties::setDefaults(const char* const defaults[], size_t num)
   {
-    for (size_t i = 0; i < num && defaults[i][0] != '\0' ; i += 2)
+    for (size_t i = 0; i < num && defaults[i] != nullptr && defaults[i][0] != '\0' ; i += 2)
       {
         setDefault(eraseBothEndsBlank(defaults[i]),
                    eraseBothEndsBlank(defaults[i + 1]));
